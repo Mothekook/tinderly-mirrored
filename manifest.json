@@ -1,9 +1,9 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "Tinder Plugin",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension was created with the awesome extensionizr.com",
-  "homepage_url": "http://extensionizr.com",
+  "description": "This extension was created to make Tinder easier :)",
+  "homepage_url": "http://theweiweiwu.com",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -20,15 +20,11 @@
     "default_title": "page action demo",
     "default_popup": "src/page_action/page_action.html"
   },
-  "permissions": ["https://tinder.com/"],
+  "permissions": ["http://*/", "storage"],
   "content_scripts": [
     {
-      "matches": ["https://www.google.com/*"],
-      "css": ["src/inject/inject.css"]
-    },
-    {
       "matches": ["https://tinder.com/*"],
-      "js": ["src/inject/inject.js"]
+      "js": ["src/inject/inject.js", "js/jquery-3.2.1.min.js"]
     }
   ]
 }
