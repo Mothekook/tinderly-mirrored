@@ -1,7 +1,8 @@
 // recsGamepad__button--like
 // recsGamepad__button--dislike
+// recCard__img
 
-// local storage stuff
+// local storage stuff, for debugging
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
     var storageChange = changes[key];
@@ -27,33 +28,37 @@ chrome.runtime.sendMessage({}, function(response) {
         if (event.metaKey && event.shiftKey && event.keyCode == 76) {
           console.log("cmd shift l was pressed");
           // set the state
-          chrome.storage.local.get(["clicked", "clickInterval"], function(
-            items
-          ) {
-            var currentClickedStatus = !items["clicked"];
-            console.log("currentClickedStatus", currentClickedStatus);
-            var clickInterval = null;
-            if (currentClickedStatus) {
-              clickInterval = setInterval(
-                // () => $(".recsGamepad__button--like").click(),
-                () => console.log("clickingggg"),
-                100
-              );
-            } else {
-              clearInterval(items["clickInterval"]);
-            }
+          chrome.storage.local.get(
+            ["clicked", "clickInterval", "image"],
+            function(items) {
+              console.log(items);
 
-            chrome.storage.local.set(
-              {
-                clicked: currentClickedStatus,
-                clickInterval
-              },
-              function() {
-                // Notify that we saved.
-                console.log("updated");
+              var currentClickedStatus = !items["clicked"];
+              console.log("currentClickedStatus", currentClickedStatus);
+
+              var clickInterval = null;
+              if (currentClickedStatus) {
+                clickInterval = setInterval(
+                  // () => $(".recsGamepad__button--like").click(),
+                  () => console.log("clickingggg"),
+                  100
+                );
+              } else {
+                clearInterval(items["clickInterval"]);
               }
-            );
-          });
+
+              chrome.storage.local.set(
+                {
+                  clicked: currentClickedStatus,
+                  clickInterval
+                },
+                function() {
+                  // Notify that we saved.
+                  console.log("updated");
+                }
+              );
+            }
+          );
         }
       });
     }
