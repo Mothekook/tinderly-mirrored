@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Tinder.io",
+  "description": "Adding more functionality to Tinder",
+  "version": "1.0",
+  "page_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "More Tinder features!"
+  }
+}
