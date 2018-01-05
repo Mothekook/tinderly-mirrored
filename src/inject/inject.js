@@ -3,8 +3,15 @@
 // recCard__img
 
 // cant really hide stuff in a chrome extension :(
-API_KEY = "71980d6f4428ea21e0f97f102472aadb";
-API_URL = "https://api.haystack.ai/api/image/analyze";
+var API_KEY = "71980d6f4428ea21e0f97f102472aadb";
+var API_URL = "https://api.haystack.ai/api/image/analyze";
+
+// different ethnicities classified
+var ASIAN = "Asian";
+var INDIAN = "East_Indian";
+var HISPANIC = "Latino_Hispanic";
+var WHITE = "White_Caucasian";
+var BLACK = "Black_African_descent";
 
 // helper function to convert b64 string to Blob to send to Haystack
 // credit to https://ourcodeworld.com/articles/read/322/how-to-convert-a-base64-image-into-a-image-file-and-upload-it-with-an-asynchronous-form-using-jquery
@@ -53,6 +60,7 @@ function getImageUrl() {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request["imageSaved"]) {
     console.log("imageSaved");
+
     // convert to blob and send to haystack
     chrome.storage.local.get("image", function(items) {
       var b64image = items["image"];
@@ -68,8 +76,81 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           var responseObject = JSON.parse(this.responseText);
-          console.log(responseObject["people"][0]["ethnicity"]["ethnicity"]);
-          console.log(responseObject["people"][0]["ethnicity"]["confidence"]);
+
+          if (!responseObject["people"]) {
+            console.log("No one detected");
+            return;
+          }
+
+          var ethnicity = responseObject["people"][0]["ethnicity"]["ethnicity"];
+          var confidence =
+            responseObject["people"][0]["ethnicity"]["confidence"];
+
+          console.log(ethnicity);
+          console.log(confidence);
+
+          // getting the states from local storage
+          chrome.storage.local.get(
+            [
+              "black",
+              "asian",
+              "hispanic",
+              "white",
+              "indian",
+              "all",
+              "confidence"
+            ],
+            function(items) {
+              if (parseInt(items["confidence"]) <= confidence * 100) {
+                console.log(items);
+                if (items["all"]) {
+                  console.log("swipe right");
+                } else {
+                  switch (ethnicity) {
+                    case BLACK:
+                      if (items["black"]) {
+                        console.log("swipe right");
+                      } else {
+                        console.log("swipe left");
+                      }
+                      break;
+                    case ASIAN:
+                      if (items["asian"]) {
+                        console.log("swipe right");
+                      } else {
+                        console.log("swipe left");
+                      }
+                      break;
+                    case INDIAN:
+                      if (items["indian"]) {
+                        console.log("swipe right");
+                      } else {
+                        console.log("swipe left");
+                      }
+                      break;
+                    case HISPANIC:
+                      if (items["hispanic"]) {
+                        console.log("swipe right");
+                      } else {
+                        console.log("swipe left");
+                      }
+                      break;
+                    case WHITE:
+                      if (items["white"]) {
+                        console.log("swipe right");
+                      } else {
+                        console.log("swipe left");
+                      }
+                      break;
+                    default:
+                      console.log("default swipe right");
+                  }
+                }
+              } else {
+                console.log("swipe left");
+              }
+            }
+          );
         }
       };
 
@@ -104,10 +185,14 @@ var readyStateCheckInterval = setInterval(function() {
             //   100
             // );
             var imageUrl = getImageUrl();
-            chrome.storage.local.set({
-              imageUrl
-            });
-            chrome.runtime.sendMessage({ imageUrlSaved: true });
+            chrome.storage.local.set(
+              {
+                imageUrl
+              },
+              function() {
+                chrome.runtime.sendMessage({ imageUrlSaved: true });
+              }
+            );
           } else {
             // clearInterval(items["clickInterval"]);
           }

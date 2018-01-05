@@ -9,9 +9,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.pageAction.show(sender.tab.id);
   if (request["imageUrlSaved"]) {
     console.log("imageUrlSaved");
-    chrome.tabs.executeScript(null, { file: "js/getImage.js" });
-    // send message to tab
-    chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
+    chrome.tabs.executeScript(
+      sender.tab.id,
+      { file: "js/getImage.js" },
+      function(result) {
+        // send message to tab
+        chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
+      }
+    );
   }
 });
 
@@ -29,3 +34,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     );
   }
 });
+
+// inital states
+var ids = ["black", "asian", "hispanic", "white", "indian"];
+for (i in ids) {
+  chrome.storage.local.set({
+    [ids[i]]: false
+  });
+}
+chrome.storage.local.set({ confidence: 50 });
+chrome.storage.local.set({ all: true });
