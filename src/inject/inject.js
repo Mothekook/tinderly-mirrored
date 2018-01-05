@@ -4,8 +4,10 @@
 
 // cant really hide stuff in a chrome extension :(
 API_KEY = "71980d6f4428ea21e0f97f102472aadb";
+API_URL = "https://api.haystack.ai/api/image/analyze";
 
 // helper function to convert b64 string to Blob to send to Haystack
+// credit to https://ourcodeworld.com/articles/read/322/how-to-convert-a-base64-image-into-a-image-file-and-upload-it-with-an-asynchronous-form-using-jquery
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
   sliceSize = sliceSize || 512;
@@ -32,12 +34,12 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 
 function getContentType(b64String) {
   var block = b64String.split(";");
-  return block[0].split(":")[1]; // In this case "image/gif"
+  return block[0].split(":")[1];
 }
 
 function getRealData(b64String) {
   var block = b64String.split(";");
-  return block[1].split(",")[1]; // In this case "R0lGODlhPQBEAPeoAJosM...."
+  return block[1].split(",")[1];
 }
 
 function getImageUrl() {
@@ -58,22 +60,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         getRealData(b64image),
         getContentType(b64image)
       );
-      var url = `https://api.haystack.ai/api/image/analyze?output=json&apikey=${API_KEY}`;
+      var url = `${API_URL}?output=json&apikey=${API_KEY}`;
       var formData = new FormData();
       formData.append("image", imageBlob);
 
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          console.log("haystack response", this.response);
+          var responseObject = JSON.parse(this.responseText);
+          console.log(responseObject["people"][0]["ethnicity"]["ethnicity"]);
+          console.log(responseObject["people"][0]["ethnicity"]["confidence"]);
         }
       };
 
+      // async request
       xhttp.open("POST", url, true);
       xhttp.send(formData);
     });
   }
 });
+
+// send blank message to get the hightlight on bar
+chrome.runtime.sendMessage({});
 
 // the the document is ready then we inject
 var readyStateCheckInterval = setInterval(function() {
