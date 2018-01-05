@@ -7,8 +7,12 @@
 //example of using a message handler from the inject scripts
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.pageAction.show(sender.tab.id);
-  chrome.tabs.executeScript(null, { file: "js/getImage.js" });
-  sendResponse();
+  if (request["imageUrlSaved"]) {
+    console.log("imageUrlSaved");
+    chrome.tabs.executeScript(null, { file: "js/getImage.js" });
+    // send message to tab
+    chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
+  }
 });
 
 // local storage stuff, for debugging

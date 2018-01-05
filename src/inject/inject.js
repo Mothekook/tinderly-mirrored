@@ -2,6 +2,9 @@
 // recsGamepad__button--dislike
 // recCard__img
 
+// cant really hide stuff in a chrome extension :(
+API_KEY = "71980d6f4428ea21e0f97f102472aadb";
+
 // helper function to convert b64 string to Blob to send to Haystack
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || "";
@@ -44,6 +47,34 @@ function getImageUrl() {
     .replace(/["']?\)$/, "");
 }
 
+// handle messages from background
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request["imageSaved"]) {
+    console.log("imageSaved");
+    // convert to blob and send to haystack
+    chrome.storage.local.get("image", function(items) {
+      var b64image = items["image"];
+      var imageBlob = b64toBlob(
+        getRealData(b64image),
+        getContentType(b64image)
+      );
+      var url = `https://api.haystack.ai/api/image/analyze?output=json&apikey=${API_KEY}`;
+      var formData = new FormData();
+      formData.append("image", imageBlob);
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("haystack response", this.response);
+        }
+      };
+
+      xhttp.open("POST", url, true);
+      xhttp.send(formData);
+    });
+  }
+});
+
 // the the document is ready then we inject
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === "complete") {
@@ -56,41 +87,27 @@ var readyStateCheckInterval = setInterval(function() {
         console.log("cmd shift l was pressed");
         // set the state
         chrome.storage.local.get(["clicked", "clickInterval"], function(items) {
-          console.log(items);
-
           var currentClickedStatus = !items["clicked"];
-          console.log("currentClickedStatus", currentClickedStatus);
-
           var clickInterval = null;
           if (currentClickedStatus) {
-            clickInterval = setInterval(
-              // () => $(".recsGamepad__button--like").click(),
-              () => console.log("clickingggg"),
-              100
-            );
+            // clickInterval = setInterval(
+            //   // () => $(".recsGamepad__button--like").click(),
+            //   () => console.log("clickingggg"),
+            //   100
+            // );
             var imageUrl = getImageUrl();
-            chrome.runtime.local.set(
-              {
-                imageUrl
-              },
-              function() {
-                console.log("got image url");
-              }
-            );
+            chrome.storage.local.set({
+              imageUrl
+            });
+            chrome.runtime.sendMessage({ imageUrlSaved: true });
           } else {
-            clearInterval(items["clickInterval"]);
+            // clearInterval(items["clickInterval"]);
           }
 
-          chrome.storage.local.set(
-            {
-              clicked: currentClickedStatus,
-              clickInterval
-            },
-            function() {
-              // Notify that we saved.
-              console.log("updated");
-            }
-          );
+          chrome.storage.local.set({
+            clicked: currentClickedStatus,
+            clickInterval
+          });
         });
       }
     });
