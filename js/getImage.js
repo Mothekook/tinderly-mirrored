@@ -22,3 +22,6 @@ xhr.onload = function() {
   reader.readAsDataURL(xhr.response);
 };
 xhr.send();
+
+//https://ourcodeworld.com/articles/read/322/how-to-convert-a-base64-image-into-a-image-file-and-upload-it-with-an-asynchronous-form-using-jquery
+//base 64 to blob to upload

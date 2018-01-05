@@ -10,3 +10,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.tabs.executeScript(null, { file: "js/getImage.js" });
   sendResponse();
 });
+
+// local storage stuff, for debugging
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  for (key in changes) {
+    var storageChange = changes[key];
+    console.log(
+      'Storage key "%s" in namespace "%s" changed. ' +
+        'Old value was "%s", new value is "%s".',
+      key,
+      namespace,
+      storageChange.oldValue,
+      storageChange.newValue
+    );
+  }
+});
