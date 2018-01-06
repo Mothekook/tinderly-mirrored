@@ -11,4 +11,5 @@ Chrome plugin for Tinder &lt;3
 * [x] Allow user to swipe based on race
 * [x] Add % confidence
 * [x] Switch to kairos api
+* [ ] Add option for user to add their own API key
 * [ ] Clean up code and publish!!!!
