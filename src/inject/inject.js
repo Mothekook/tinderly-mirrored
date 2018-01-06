@@ -1,10 +1,10 @@
 // cant really hide stuff in a chrome extension :(
 
 // kairos headers
-var HEADERS = {
-  app_id: "5b2e102e",
-  app_key: "2a2d8eb7765e52b857042a7794f7c7ac"
-};
+// var HEADERS = {
+//   app_id: "5b2e102e",
+//   app_key: "2a2d8eb7765e52b857042a7794f7c7ac"
+// };
 
 var URL = "https://api.kairos.com/detect";
 
@@ -39,69 +39,79 @@ function getAttributes(response) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request["imageSaved"]) {
     // send to API
-    chrome.storage.local.get(["clicked", "imageUrl"], function(items) {
-      // if we are not clicked then end execution
-      if (!items["clicked"]) {
-        return;
-      }
-      var payload = { image: items["imageUrl"] };
-      $.ajax(URL, {
-        headers: HEADERS,
-        type: "POST",
-        data: JSON.stringify(payload),
-        dataType: "text",
-        success: function(response) {
-          jsonResponse = JSON.parse(response);
-          var attributes = getAttributes(jsonResponse);
-          if (!attributes) {
-            console.log("No faces recognized");
-            swipeLeft();
-            chrome.runtime.sendMessage({ swiped: true });
-            return;
-          }
-          var shouldSwipeRight = true;
-          var ethnicities = ["black", "asian", "hispanic", "white"];
-          var fields = ethnicities.map(item => item + "Confidence");
-          chrome.storage.local.get([...fields, ...ethnicities, "all"], function(
-            items
-          ) {
-            if (items["all"]) {
-              // swipe right
-              console.log("all swipe right");
-              swipeRight();
-            } else {
-              // get the required fields
-              var required = [];
-              for (i in ethnicities) {
-                if (items[ethnicities[i]]) {
-                  required.push(ethnicities[i]);
-                }
-              }
-              // check that the required confidence match
-              var requiredFields = required.map(item => item + "Confidence");
-              for (var i = 0; i < requiredFields.length; i++) {
-                var responseConfidence = attributes[required[i]];
-                var storedConfidence = items[requiredFields[i]];
-                if (responseConfidence < storedConfidence / 100) {
-                  shouldSwipeRight = false;
-                }
-              }
-              if (shouldSwipeRight) {
-                console.log("swipe right");
-                swipeRight();
-              } else {
-                console.log("swipe left");
-                swipeLeft();
-              }
-            }
-            chrome.runtime.sendMessage({ swiped: true });
-          });
-        },
-        error: function(error) {
-          alert("Failed to call Kairos API");
+    chrome.storage.local.get(
+      ["clicked", "imageUrl", "kairosId", "kairosKey"],
+      function(items) {
+        // if we are not clicked then end execution
+        if (!items["clicked"]) {
+          return;
         }
-      });
-    });
+        var header = {
+          app_id: items["kairosId"],
+          app_key: items["kairosKey"]
+        };
+        var payload = { image: items["imageUrl"] };
+        $.ajax(URL, {
+          headers: header,
+          type: "POST",
+          data: JSON.stringify(payload),
+          dataType: "text",
+          success: function(response) {
+            jsonResponse = JSON.parse(response);
+            var attributes = getAttributes(jsonResponse);
+            if (!attributes) {
+              console.log("No faces recognized");
+              swipeLeft();
+              chrome.runtime.sendMessage({ swiped: true });
+              return;
+            }
+            var shouldSwipeRight = true;
+            var ethnicities = ["black", "asian", "hispanic", "white"];
+            var fields = ethnicities.map(item => item + "Confidence");
+            chrome.storage.local.get(
+              [...fields, ...ethnicities, "all"],
+              function(items) {
+                if (items["all"]) {
+                  // swipe right
+                  console.log("all swipe right");
+                  swipeRight();
+                } else {
+                  // get the required fields
+                  var required = [];
+                  for (i in ethnicities) {
+                    if (items[ethnicities[i]]) {
+                      required.push(ethnicities[i]);
+                    }
+                  }
+                  // check that the required confidence match
+                  var requiredFields = required.map(
+                    item => item + "Confidence"
+                  );
+                  for (var i = 0; i < requiredFields.length; i++) {
+                    var responseConfidence = attributes[required[i]];
+                    var storedConfidence = items[requiredFields[i]];
+                    if (responseConfidence < storedConfidence / 100) {
+                      shouldSwipeRight = false;
+                    }
+                  }
+                  if (shouldSwipeRight) {
+                    console.log("swipe right");
+                    swipeRight();
+                  } else {
+                    console.log("swipe left");
+                    swipeLeft();
+                  }
+                }
+                chrome.runtime.sendMessage({ swiped: true });
+              }
+            );
+          },
+          error: function(error) {
+            alert("Failed to call Kairos API");
+          }
+        });
+      }
+    );
   } else if (request["getImageUrl"]) {
     var imageUrl = getImageUrl();
     chrome.storage.local.set(
@@ -128,7 +138,14 @@ var readyStateCheckInterval = setInterval(function() {
       if (event.metaKey && event.shiftKey && event.keyCode == 76) {
         console.log("cmd shift l was pressed");
         // set the state
-        chrome.storage.local.get("clicked", function(items) {
+        chrome.storage.local.get(["clicked", "kairosId", "kairosKey"], function(
+          items
+        ) {
+          if (!items["kairosId"] || !items["kairosKey"]) {
+            alert("Please set Kairos configs!");
+            return;
+          }
+
           var nextClickedStatus = !items["clicked"];
           if (nextClickedStatus) {
             var imageUrl = getImageUrl();
