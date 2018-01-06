@@ -10,4 +10,5 @@ Chrome plugin for Tinder &lt;3
 * [x] Connect Haystack.ai
 * [x] Allow user to swipe based on race
 * [x] Add % confidence
-* [ ] Switch to kairos api
+* [x] Switch to kairos api
+* [ ] Clean up code and publish!!!!
