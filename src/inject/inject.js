@@ -11,7 +11,7 @@ var URL = "https://api.kairos.com/detect";
 // css class name selectors
 var LIKE = ".recsGamepad__button--like";
 var DISLIKE = ".recsGamepad__button--dislike";
-var IMAGE = ".recCard__img";
+var IMAGE = "div.recCard__img:eq(1)";
 
 function swipeRight() {
   $(LIKE).click();
@@ -59,7 +59,42 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             chrome.storage.local.set({
               clicked: false
             });
+            return;
           }
+          var shouldSwipeRight = true;
+          var ethnicities = ["black", "asian", "hispanic", "white"];
+          var fields = ethnicities.map(item => item + "Confidence");
+          chrome.storage.local.get([...fields, ...ethnicities, "all"], function(
+            items
+          ) {
+            if (items["all"]) {
+              // swipe right
+              console.log("all swipe right");
+            } else {
+              // get the required fields
+              var required = [];
+              for (i in ethnicities) {
+                if (items[ethnicities[i]]) {
+                  required.push(ethnicities[i]);
+                }
+              }
+              // check that the required confidence match
+              var requiredFields = required.map(item => item + "Confidence");
+              for (var i = 0; i < requiredFields.length; i++) {
+                var responseConfidence = attributes[required[i]];
+                var storedConfidence = items[requiredFields[i]];
+                if (responseConfidence < storedConfidence / 100) {
+                  shouldSwipeRight = false;
+                }
+              }
+              if (shouldSwipeRight) {
+                console.log("swipe right");
+              } else {
+                console.log("swipe left");
+              }
+            }
+            chrome.runtime.sendMessage({ swiped: true });
+          });
         },
         error: function(error) {
           alert("Failed to call Kairos API");

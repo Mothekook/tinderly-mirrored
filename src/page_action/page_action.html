@@ -3,12 +3,15 @@
 <style type="text/css">
 	.mainPopup {
 		height: 200px;
-		width: 200px;
+		width: 250px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 	}
 	h1 {
-
 		font-size: 2em;
+	}
+	div {
+		text-align: center;
+		margin-top: 5px;
 	}
 </style>
 
@@ -16,29 +19,29 @@
 	<h1>Tinder Plugin</h1>
 	<p><strong>cmd-shift-L</strong> to start Auto Swiping</p>
 	<h3>Options</h3>
-	<h4>Ethnic preference</h4>
+	<h4>Ethnic preference %</h4>
 		<div>
 			<input type="checkbox" id="black">Black
+			<input type="range" min="1" max="100" value="50" class="slider" id="black-confidence">
+			<label id="black-confidence-value">50</label>
 		</div>
 		<div>
 			<input type="checkbox" id="asian">Asian
+			<input type="range" min="1" max="100" value="50" class="slider" id="asian-confidence">
+			<label id="asian-confidence-value">50</label>
 		</div>
 		<div>
 			<input type="checkbox" id="white">White
+			<input type="range" min="1" max="100" value="50" class="slider" id="white-confidence">
+			<label id="white-confidence-value">50</label>
 		</div>
 		<div>
-			<input type="checkbox" id="hispanic">Latino / Hispanic
-		</div>
-		<div>
-			<input type="checkbox" id="indian">Indian
+			<input type="checkbox" id="hispanic">Hispanic
+			<input type="range" min="1" max="100" value="50" class="slider" id="hispanic-confidence">
+			<label id="hispanic-confidence-value">50</label>
 		</div>
 		<div>
 			<input type="checkbox" id="all">No preference
-		</div>
-	<h4>% confidence level</h4>
-		<div>
-			<input type="range" min="1" max="100" value="50" class="slider" id="confidence">
-			<label id="confidence-value">50</label>
 		</div>
 
 </div>

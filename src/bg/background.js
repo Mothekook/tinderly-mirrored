@@ -42,12 +42,12 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 });
 
 // inital states
-var ids = ["black", "asian", "hispanic", "white", "indian"];
+var ids = ["black", "asian", "hispanic", "white"];
 for (i in ids) {
   chrome.storage.local.set({
-    [ids[i]]: false
+    [ids[i]]: false,
+    [`${ids[i]}Confidence`]: 50
   });
 }
-chrome.storage.local.set({ confidence: 50 });
 chrome.storage.local.set({ all: true });
 chrome.storage.local.set({ clicked: false });

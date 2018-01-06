@@ -1,14 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-  var ids = ["black", "asian", "hispanic", "white", "indian"];
+  var ids = ["black", "asian", "hispanic", "white"];
 
   // load previous states
-  chrome.storage.local.get([...ids, "all", "confidence"], function(items) {
-    document.querySelector("#confidence-value").innerHTML = items["confidence"];
-    document.querySelector("#confidence").value = parseInt(items["confidence"]);
+  chrome.storage.local.get(null, function(items) {
     for (i in ids) {
       document.querySelector(`#${ids[i]}`).checked = items[ids[i]];
+      document.querySelector(`#${ids[i]}-confidence-value`).innerHTML =
+        items[`${ids[i]}Confidence`];
+      document.querySelector(`#${ids[i]}-confidence`).value = parseInt(
+        items[`${ids[i]}Confidence`]
+      );
       if (items["all"]) {
         document.querySelector(`#${ids[i]}`).disabled = true;
+        document.querySelector(`#${ids[i]}-confidence`).disabled = true;
         document.querySelector("#all").checked = true;
       }
     }
@@ -29,17 +33,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.checked) {
       for (i in ids) {
         document.querySelector(`#${ids[i]}`).disabled = true;
+        document.querySelector(`#${ids[i]}-confidence`).disabled = true;
       }
       chrome.storage.local.set({ [e.target.id]: true });
     } else {
       for (i in ids) {
         document.querySelector(`#${ids[i]}`).disabled = false;
+        document.querySelector(`#${ids[i]}-confidence`).disabled = false;
       }
       chrome.storage.local.set({ [e.target.id]: false });
     }
   });
-  document.getElementById("confidence").oninput = function() {
-    document.querySelector("#confidence-value").innerHTML = this.value;
-    chrome.storage.local.set({ confidence: this.value });
-  };
+  for (i in ids) {
+    document
+      .getElementById(`${ids[i]}-confidence`)
+      .addEventListener("input", function(e) {
+        console.log(`#${e.target.id}-value`);
+        document.querySelector(`#${e.target.id}-value`).innerHTML = this.value;
+        chrome.storage.local.set({
+          [`${e.target.id.replace("-confidence", "")}Confidence`]: this.value
+        });
+      });
+  }
 });
