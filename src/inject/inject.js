@@ -13,6 +13,19 @@ var HISPANIC = "Latino_Hispanic";
 var WHITE = "White_Caucasian";
 var BLACK = "Black_African_descent";
 
+// css class name selectors
+var LIKE = ".recsGamepad__button--like";
+var DISLIKE = ".recsGamepad__button--dislike";
+var IMAGE = ".recCard__img";
+
+function swipeRight() {
+  $(LIKE).click();
+}
+
+function swipeLeft() {
+  $(DISLIKE).click();
+}
+
 // helper function to convert b64 string to Blob to send to Haystack
 // credit to https://ourcodeworld.com/articles/read/322/how-to-convert-a-base64-image-into-a-image-file-and-upload-it-with-an-asynchronous-form-using-jquery
 function b64toBlob(b64Data, contentType, sliceSize) {
@@ -50,7 +63,7 @@ function getRealData(b64String) {
 }
 
 function getImageUrl() {
-  return $(".recCard__img")
+  return $(IMAGE)
     .css("background-image")
     .replace(/^url\(["']?/, "")
     .replace(/["']?\)$/, "");
