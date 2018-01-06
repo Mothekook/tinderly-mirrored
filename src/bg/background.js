@@ -17,6 +17,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
       }
     );
+  } else if (request["swiped"]) {
+    // send message to getImageUrl
+    chrome.tabs.sendMessage(sender.tab.id, { getImageUrl: true });
   }
 });
 
@@ -44,3 +47,4 @@ for (i in ids) {
 }
 chrome.storage.local.set({ confidence: 50 });
 chrome.storage.local.set({ all: true });
+chrome.storage.local.set({ clicked: false });

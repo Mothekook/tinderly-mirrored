@@ -1,9 +1,5 @@
-// recsGamepad__button--like
-// recsGamepad__button--dislike
-// recCard__img
-
 // cant really hide stuff in a chrome extension :(
-var API_KEY = "71980d6f4428ea21e0f97f102472aadb";
+var API_KEY = "0fd774da9901ec352a6cfa6677f2cf66";
 var API_URL = "https://api.haystack.ai/api/image/analyze";
 
 // different ethnicities classified
@@ -72,10 +68,12 @@ function getImageUrl() {
 // handle messages from background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request["imageSaved"]) {
-    console.log("imageSaved");
-
     // convert to blob and send to haystack
-    chrome.storage.local.get("image", function(items) {
+    chrome.storage.local.get(["clicked", "image"], function(items) {
+      // if we are not clicked then end execution
+      if (!items["clicked"]) {
+        return;
+      }
       var b64image = items["image"];
       var imageBlob = b64toBlob(
         getRealData(b64image),
@@ -92,6 +90,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
           if (!responseObject["people"]) {
             console.log("No one detected");
+            // pretend we swiped and keep going
+            chrome.runtime.sendMessage({ swiped: true });
             return;
           }
 
@@ -115,7 +115,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             ],
             function(items) {
               if (parseInt(items["confidence"]) <= confidence * 100) {
-                console.log(items);
                 if (items["all"]) {
                   console.log("swipe right");
                 } else {
@@ -156,14 +155,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                       }
                       break;
                     default:
-                      console.log("default swipe right");
+                      console.log("default swipe left");
                   }
                 }
               } else {
                 console.log("swipe left");
               }
+
+              // send message that we swiped
+              chrome.runtime.sendMessage({ swiped: true });
             }
           );
+        } else if (this.readyState == 4) {
+          alert("Haystack.ai http request failed");
         }
       };
 
@@ -171,6 +175,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       xhttp.open("POST", url, true);
       xhttp.send(formData);
     });
+  } else if (request["getImageUrl"]) {
+    var imageUrl = getImageUrl();
+    chrome.storage.local.set(
+      {
+        imageUrl
+      },
+      function() {
+        chrome.runtime.sendMessage({ imageUrlSaved: true });
+      }
+    );
   }
 });
 
@@ -181,39 +195,31 @@ chrome.runtime.sendMessage({});
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === "complete") {
     clearInterval(readyStateCheckInterval);
-    console.log("Hello. This message was sent from scripts/inject.js");
 
     // add the keyboard listener for cmd shift l
     document.addEventListener("keydown", function(event) {
       if (event.metaKey && event.shiftKey && event.keyCode == 76) {
         console.log("cmd shift l was pressed");
         // set the state
-        chrome.storage.local.get(["clicked", "clickInterval"], function(items) {
-          var currentClickedStatus = !items["clicked"];
-          var clickInterval = null;
-          if (currentClickedStatus) {
-            // clickInterval = setInterval(
-            //   // () => $(".recsGamepad__button--like").click(),
-            //   () => console.log("clickingggg"),
-            //   100
-            // );
+        chrome.storage.local.get("clicked", function(items) {
+          var nextClickedStatus = !items["clicked"];
+          if (nextClickedStatus) {
             var imageUrl = getImageUrl();
             chrome.storage.local.set(
               {
-                imageUrl
+                imageUrl,
+                clicked: true
               },
               function() {
                 chrome.runtime.sendMessage({ imageUrlSaved: true });
               }
             );
           } else {
-            // clearInterval(items["clickInterval"]);
+            // stop the execution
+            chrome.storage.local.set({
+              clicked: false
+            });
           }
-
-          chrome.storage.local.set({
-            clicked: currentClickedStatus,
-            clickInterval
-          });
         });
       }
     });
