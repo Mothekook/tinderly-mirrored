@@ -1,7 +1,4 @@
 // cant really hide stuff in a chrome extension :(
-// haystack API info
-var API_KEY = "0fd774da9901ec352a6cfa6677f2cf66";
-var API_URL = "https://api.haystack.ai/api/image/analyze";
 
 // kairos headers
 var HEADERS = {
@@ -9,12 +6,7 @@ var HEADERS = {
   app_key: "2a2d8eb7765e52b857042a7794f7c7ac"
 };
 
-// different ethnicities classified
-var ASIAN = "Asian";
-var INDIAN = "East_Indian";
-var HISPANIC = "Latino_Hispanic";
-var WHITE = "White_Caucasian";
-var BLACK = "Black_African_descent";
+var URL = "https://api.kairos.com/detect";
 
 // css class name selectors
 var LIKE = ".recsGamepad__button--like";
@@ -29,42 +21,6 @@ function swipeLeft() {
   $(DISLIKE).click();
 }
 
-// helper function to convert b64 string to Blob to send to Haystack
-// credit to https://ourcodeworld.com/articles/read/322/how-to-convert-a-base64-image-into-a-image-file-and-upload-it-with-an-asynchronous-form-using-jquery
-function b64toBlob(b64Data, contentType, sliceSize) {
-  contentType = contentType || "";
-  sliceSize = sliceSize || 512;
-
-  var byteCharacters = atob(b64Data);
-  var byteArrays = [];
-
-  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    var byteNumbers = new Array(slice.length);
-    for (var i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    var byteArray = new Uint8Array(byteNumbers);
-
-    byteArrays.push(byteArray);
-  }
-
-  var blob = new Blob(byteArrays, { type: contentType });
-  return blob;
-}
-
-function getContentType(b64String) {
-  var block = b64String.split(";");
-  return block[0].split(":")[1];
-}
-
-function getRealData(b64String) {
-  var block = b64String.split(";");
-  return block[1].split(",")[1];
-}
-
 function getImageUrl() {
   return $(IMAGE)
     .css("background-image")
@@ -72,115 +28,43 @@ function getImageUrl() {
     .replace(/["']?\)$/, "");
 }
 
-// handle messages from background
+function getAttributes(response) {
+  if (!response["images"]) {
+    return null;
+  }
+  return response["images"][0]["faces"][0]["attributes"];
+}
+
+// handle messages from background.js
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request["imageSaved"]) {
-    // convert to blob and send to API
-    chrome.storage.local.get(["clicked", "image"], function(items) {
+    // send to API
+    chrome.storage.local.get(["clicked", "imageUrl"], function(items) {
       // if we are not clicked then end execution
       if (!items["clicked"]) {
         return;
       }
-      var b64image = items["image"];
-      var imageBlob = b64toBlob(
-        getRealData(b64image),
-        getContentType(b64image)
-      );
-      var url = `${API_URL}?output=json&apikey=${API_KEY}`;
-      var formData = new FormData();
-      formData.append("image", imageBlob);
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          var responseObject = JSON.parse(this.responseText);
-
-          if (!responseObject["people"]) {
-            console.log("No one detected");
-            // pretend we swiped and keep going
-            chrome.runtime.sendMessage({ swiped: true });
-            return;
+      var payload = { image: items["imageUrl"] };
+      $.ajax(URL, {
+        headers: HEADERS,
+        type: "POST",
+        data: JSON.stringify(payload),
+        dataType: "text",
+        success: function(response) {
+          jsonResponse = JSON.parse(response);
+          console.log(jsonResponse);
+          var attributes = getAttributes(jsonResponse);
+          if (!attributes) {
+            alert("No faces recognized");
+            chrome.storage.local.set({
+              clicked: false
+            });
           }
-
-          var ethnicity = responseObject["people"][0]["ethnicity"]["ethnicity"];
-          var confidence =
-            responseObject["people"][0]["ethnicity"]["confidence"];
-
-          console.log(ethnicity);
-          console.log(confidence);
-
-          // getting the states from local storage
-          chrome.storage.local.get(
-            [
-              "black",
-              "asian",
-              "hispanic",
-              "white",
-              "indian",
-              "all",
-              "confidence"
-            ],
-            function(items) {
-              if (parseInt(items["confidence"]) <= confidence * 100) {
-                if (items["all"]) {
-                  console.log("swipe right");
-                } else {
-                  switch (ethnicity) {
-                    case BLACK:
-                      if (items["black"]) {
-                        console.log("swipe right");
-                      } else {
-                        console.log("swipe left");
-                      }
-                      break;
-                    case ASIAN:
-                      if (items["asian"]) {
-                        console.log("swipe right");
-                      } else {
-                        console.log("swipe left");
-                      }
-                      break;
-                    case INDIAN:
-                      if (items["indian"]) {
-                        console.log("swipe right");
-                      } else {
-                        console.log("swipe left");
-                      }
-                      break;
-                    case HISPANIC:
-                      if (items["hispanic"]) {
-                        console.log("swipe right");
-                      } else {
-                        console.log("swipe left");
-                      }
-                      break;
-                    case WHITE:
-                      if (items["white"]) {
-                        console.log("swipe right");
-                      } else {
-                        console.log("swipe left");
-                      }
-                      break;
-                    default:
-                      console.log("default swipe left");
-                  }
-                }
-              } else {
-                console.log("swipe left");
-              }
-
-              // send message that we swiped
-              chrome.runtime.sendMessage({ swiped: true });
-            }
-          );
-        } else if (this.readyState == 4) {
-          alert("Haystack.ai http request failed");
+        },
+        error: function(error) {
+          alert("Failed to call Kairos API");
         }
-      };
-
-      // async request
-      xhttp.open("POST", url, true);
-      xhttp.send(formData);
+      });
     });
   } else if (request["getImageUrl"]) {
     var imageUrl = getImageUrl();

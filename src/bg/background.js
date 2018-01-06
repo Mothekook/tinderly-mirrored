@@ -9,14 +9,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   chrome.pageAction.show(sender.tab.id);
   if (request["imageUrlSaved"]) {
     console.log("imageUrlSaved");
-    chrome.tabs.executeScript(
-      sender.tab.id,
-      { file: "js/getImage.js" },
-      function(result) {
-        // send message to tab
-        chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
-      }
-    );
+    // chrome.tabs.executeScript(
+    //   sender.tab.id,
+    //   { file: "js/getImage.js" },
+    //   function(result) {
+    //     // send message to tab
+    //     chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
+    //   }
+    // );
+
+    // we dont need the actual image now lol
+    chrome.tabs.sendMessage(sender.tab.id, { imageSaved: true });
   } else if (request["swiped"]) {
     // send message to getImageUrl
     chrome.tabs.sendMessage(sender.tab.id, { getImageUrl: true });
