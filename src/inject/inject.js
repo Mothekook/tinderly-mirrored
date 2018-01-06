@@ -1,11 +1,4 @@
 // cant really hide stuff in a chrome extension :(
-
-// kairos headers
-// var HEADERS = {
-//   app_id: "5b2e102e",
-//   app_key: "2a2d8eb7765e52b857042a7794f7c7ac"
-// };
-
 var URL = "https://api.kairos.com/detect";
 
 // css class name selectors

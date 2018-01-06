@@ -26,14 +26,16 @@ this.manifest = {
       name: "saveButton",
       type: "button",
       text: "Save Configs"
+    },
+    {
+      tab: i18n.get("kairos-configs"),
+      group: i18n.get("auth"),
+      name: "kairosDescription",
+      type: "description",
+      text:
+        "Go here to sign up for a free developer account: \
+       https://developer.kairos.com"
     }
-    // {
-    //   tab: i18n.get("information"),
-    //   group: i18n.get("login"),
-    //   name: "myDescription",
-    //   type: "description",
-    //   text: i18n.get("description")
-    // },
     // {
     //   tab: i18n.get("information"),
     //   group: i18n.get("logout"),
