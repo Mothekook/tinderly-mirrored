@@ -68,7 +68,7 @@ function getImageUrl() {
 // handle messages from background
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request["imageSaved"]) {
-    // convert to blob and send to haystack
+    // convert to blob and send to API
     chrome.storage.local.get(["clicked", "image"], function(items) {
       // if we are not clicked then end execution
       if (!items["clicked"]) {
