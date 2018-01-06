@@ -56,6 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
   document
-    .getElementById("options")
+    .getElementById("kairos")
     .addEventListener("click", () => chrome.runtime.openOptionsPage());
 });

@@ -2,47 +2,78 @@
 <script src="page_action.js"></script>
 <style type="text/css">
 	.main-popup {
-		height: 200px;
+		height: 310px;
 		width: 250px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
+		background-color: #f8f8f8;
 	}
 	h1 {
 		font-size: 2em;
 	}
 	div {
 		text-align: center;
-		margin-top: 5px;
+	}
+	div.options {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	div.options-last {
+		justify-content: left;
+	}
+	div.separator {
+    width: 100%;
+    border-top: 2px groove white;
+    margin: 5px -5px 5px -3px;
+	}
+	#all {
+		margin-right: 10px;
+	}
+	div.config {
+		text-align: left;
+	}
+	div.config:hover {
+		cursor: pointer;
+		background-color: #e5e5e5;
+	}
+	div.header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
 
 <div class="main-popup">
-	<h1>Tinder Plugin</h1>
+	<div class="header">
+		<img src='icon48.png'</img>
+		<h2>Plugin</h2>
+	</div>
 	<p><strong>cmd-shift-L</strong> to start Auto Swiping</p>
-	<h3>Options</h3>
+	<div class="separator"></div>
+	<div class="config" id="kairos">Kairos Configs</div>
+	<div class="separator"></div>
 	<h4>Ethnic preference %</h4>
-		<div>
-			<input type="checkbox" id="black">Black
-			<input type="range" min="1" max="100" value="50" class="slider" id="black-confidence">
-			<label id="black-confidence-value">50</label>
-		</div>
-		<div>
-			<input type="checkbox" id="asian">Asian
-			<input type="range" min="1" max="100" value="50" class="slider" id="asian-confidence">
-			<label id="asian-confidence-value">50</label>
-		</div>
-		<div>
-			<input type="checkbox" id="white">White
-			<input type="range" min="1" max="100" value="50" class="slider" id="white-confidence">
-			<label id="white-confidence-value">50</label>
-		</div>
-		<div>
-			<input type="checkbox" id="hispanic">Hispanic
-			<input type="range" min="1" max="100" value="50" class="slider" id="hispanic-confidence">
-			<label id="hispanic-confidence-value">50</label>
-		</div>
-		<div>
-			<input type="checkbox" id="all">No preference
-		</div>
-		<input type="button" id="options" value="Options"/>
-
+	<div class="options">
+		<input type="checkbox" id="black">Black
+		<input type="range" min="1" max="100" value="50" class="slider" id="black-confidence">
+		<label id="black-confidence-value">50</label>
+	</div>
+	<div class="options">
+		<input type="checkbox" id="asian">Asian
+		<input type="range" min="1" max="100" value="50" class="slider" id="asian-confidence">
+		<label id="asian-confidence-value">50</label>
+	</div>
+	<div class="options">
+		<input type="checkbox" id="white">White
+		<input type="range" min="1" max="100" value="50" class="slider" id="white-confidence">
+		<label id="white-confidence-value">50</label>
+	</div>
+	<div class="options">
+		<input type="checkbox" id="hispanic">Hispanic
+		<input type="range" min="1" max="100" value="50" class="slider" id="hispanic-confidence">
+		<label id="hispanic-confidence-value">50</label>
+	</div>
+	<div class="options options-last">
+		<input type="checkbox" id="all">No preference
+	</div>
 </div>
