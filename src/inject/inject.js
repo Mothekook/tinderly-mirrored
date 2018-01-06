@@ -52,13 +52,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         dataType: "text",
         success: function(response) {
           jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
           var attributes = getAttributes(jsonResponse);
           if (!attributes) {
-            alert("No faces recognized");
-            chrome.storage.local.set({
-              clicked: false
-            });
+            console.log("No faces recognized");
+            swipeLeft();
+            chrome.runtime.sendMessage({ swiped: true });
             return;
           }
           var shouldSwipeRight = true;
@@ -70,6 +68,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             if (items["all"]) {
               // swipe right
               console.log("all swipe right");
+              swipeRight();
             } else {
               // get the required fields
               var required = [];
@@ -89,8 +88,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
               }
               if (shouldSwipeRight) {
                 console.log("swipe right");
+                swipeRight();
               } else {
                 console.log("swipe left");
+                swipeLeft();
               }
             }
             chrome.runtime.sendMessage({ swiped: true });
@@ -142,6 +143,7 @@ var readyStateCheckInterval = setInterval(function() {
             );
           } else {
             // stop the execution
+            console.log("execution ended");
             chrome.storage.local.set({
               clicked: false
             });
