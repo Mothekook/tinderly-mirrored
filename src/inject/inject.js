@@ -1,6 +1,13 @@
 // cant really hide stuff in a chrome extension :(
+// haystack API info
 var API_KEY = "0fd774da9901ec352a6cfa6677f2cf66";
 var API_URL = "https://api.haystack.ai/api/image/analyze";
+
+// kairos headers
+var HEADERS = {
+  app_id: "5b2e102e",
+  app_key: "2a2d8eb7765e52b857042a7794f7c7ac"
+};
 
 // different ethnicities classified
 var ASIAN = "Asian";
