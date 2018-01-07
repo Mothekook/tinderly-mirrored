@@ -2,7 +2,7 @@
 
 Chrome plugin for Tinder &lt;3
 
-![Screen shot](https://ibb.co/h1bWWb)
+![Screen shot](https://image.ibb.co/csy0Pw/Screen_Shot_2018_01_06_at_7_24_34_PM.png)
 
 ## Table of Content
 
