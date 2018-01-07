@@ -100,7 +100,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             );
           },
           error: function(error) {
-            alert("Failed to call Kairos API");
+            alert(
+              "Failed to call Kairos API. Make sure you are not over minute limit of 25 calls"
+            );
           }
         });
       }
