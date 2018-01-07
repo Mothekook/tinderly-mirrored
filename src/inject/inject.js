@@ -30,13 +30,13 @@ function getAttributes(response) {
 
 // handle messages from background.js
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request["imageSaved"]) {
-    // send to API
+  // if the URL was acknoledged
+  if (request["ackImgUrlSaved"]) {
     chrome.storage.local.get(
-      ["clicked", "imageUrl", "kairosId", "kairosKey"],
+      ["running", "imageUrl", "kairosId", "kairosKey"],
       function(items) {
-        // if we are not clicked then end execution
-        if (!items["clicked"]) {
+        // if we are not running then end execution
+        if (!items["running"]) {
           return;
         }
         var header = {
@@ -129,9 +129,9 @@ var readyStateCheckInterval = setInterval(function() {
     // add the keyboard listener for cmd shift l
     document.addEventListener("keydown", function(event) {
       if (event.metaKey && event.shiftKey && event.keyCode == 76) {
-        console.log("cmd shift l was pressed");
+        console.log("cmd shift L was pressed");
         // set the state
-        chrome.storage.local.get(["clicked", "kairosId", "kairosKey"], function(
+        chrome.storage.local.get(["running", "kairosId", "kairosKey"], function(
           items
         ) {
           if (!items["kairosId"] || !items["kairosKey"]) {
@@ -139,13 +139,13 @@ var readyStateCheckInterval = setInterval(function() {
             return;
           }
 
-          var nextClickedStatus = !items["clicked"];
-          if (nextClickedStatus) {
+          var nextStatus = !items["running"];
+          if (nextStatus) {
             var imageUrl = getImageUrl();
             chrome.storage.local.set(
               {
                 imageUrl,
-                clicked: true
+                running: true
               },
               function() {
                 chrome.runtime.sendMessage({ imageUrlSaved: true });
@@ -155,7 +155,7 @@ var readyStateCheckInterval = setInterval(function() {
             // stop the execution
             console.log("execution ended");
             chrome.storage.local.set({
-              clicked: false
+              running: false
             });
           }
         });
