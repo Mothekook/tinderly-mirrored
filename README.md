@@ -2,6 +2,8 @@
 
 Chrome plugin for Tinder &lt;3
 
+![Screen shot](https://ibb.co/h1bWWb)
+
 ## Table of Content
 
 * [Roadmap](#roadmap)
