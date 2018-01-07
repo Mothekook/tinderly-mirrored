@@ -23,7 +23,7 @@ Chrome plugin for Tinder &lt;3
 * [x] Switch to kairos api
 * [x] Add option for user to add their own API key
 * [x] Make it prettier
-* [ ] Add contributing notes / documentation
+* [x] Add contributing notes / documentation
 * [ ] Add disclaimer about dating w racial preferences
 * [ ] Clean up code and publish!!!!
 
