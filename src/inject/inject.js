@@ -53,7 +53,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             jsonResponse = JSON.parse(response);
             var attributes = getAttributes(jsonResponse);
             if (!attributes) {
-              console.log("No faces recognized");
+              // console.log("No faces recognized");
               swipeLeft();
               chrome.runtime.sendMessage({ swiped: true });
               return;
@@ -66,7 +66,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
               function(items) {
                 if (items["all"]) {
                   // swipe right
-                  console.log("all swipe right");
+                  // console.log("all swipe right");
                   swipeRight();
                 } else {
                   // get the required fields
@@ -88,10 +88,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     }
                   }
                   if (shouldSwipeRight) {
-                    console.log("swipe right");
+                    // console.log("swipe right");
                     swipeRight();
                   } else {
-                    console.log("swipe left");
+                    // console.log("swipe left");
                     swipeLeft();
                   }
                 }
@@ -131,7 +131,7 @@ var readyStateCheckInterval = setInterval(function() {
     // add the keyboard listener for cmd shift l
     document.addEventListener("keydown", function(event) {
       if (event.metaKey && event.shiftKey && event.keyCode == 76) {
-        console.log("cmd shift L was pressed");
+        // console.log("cmd shift L was pressed");
         // set the state
         chrome.storage.local.get(["running", "kairosId", "kairosKey"], function(
           items
@@ -155,7 +155,7 @@ var readyStateCheckInterval = setInterval(function() {
             );
           } else {
             // stop the execution
-            console.log("execution ended");
+            // console.log("execution ended");
             chrome.storage.local.set({
               running: false
             });
