@@ -4,6 +4,14 @@ Chrome plugin for Tinder &lt;3
 
 ![Screen shot](https://image.ibb.co/csy0Pw/Screen_Shot_2018_01_06_at_7_24_34_PM.png)
 
+**USE AT YOUR OWN RISK**
+
+Dating w racial preferences has all kinds of problems.
+
+> This is about social forces shaping our preferences, and we’ll never progress without acknowledging that fact. To take one of the most obvious and simple examples, consider Hollywood, which is notoriously white. According to the 2014 and 2015 Hollywood Diversity Report, minorities “remain underrepresented on every front.” They’ve reported that “more than half of films had casts that were 10% minority or less.” (The Every Single Word Spoken project is a great illustration of this.) Hollywood is also hot. Like really hot. The societal norm for “hot,” in fact. That means the math equation looks something like this: If Hollywood=White, and Hollywood=Hot, then White=Hot.
+
+https://theestablishment.co/yes-your-dating-preferences-are-probably-racist-e58ae2fd625d
+
 ## Table of Content
 
 * [Roadmap](#roadmap)
@@ -26,14 +34,6 @@ Chrome plugin for Tinder &lt;3
 * [x] Add contributing notes / documentation
 * [x] Add disclaimer about dating w racial preferences
 * [ ] Clean up code and publish!!!!
-
-**USE AT YOUR OWN RISK**
-
-Dating w racial preferences has all kinds of problems.
-
-> This is about social forces shaping our preferences, and we’ll never progress without acknowledging that fact. To take one of the most obvious and simple examples, consider Hollywood, which is notoriously white. According to the 2014 and 2015 Hollywood Diversity Report, minorities “remain underrepresented on every front.” They’ve reported that “more than half of films had casts that were 10% minority or less.” (The Every Single Word Spoken project is a great illustration of this.) Hollywood is also hot. Like really hot. The societal norm for “hot,” in fact. That means the math equation looks something like this: If Hollywood=White, and Hollywood=Hot, then White=Hot.
-
-https://theestablishment.co/yes-your-dating-preferences-are-probably-racist-e58ae2fd625d
 
 ## Documentation
 
