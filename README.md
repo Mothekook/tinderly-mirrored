@@ -94,7 +94,7 @@ We use local storage to store stuff about preferences and other states
 `imageUrl` **string** image url fetched from the tinder.com webapp
 
 ```javascript
-// inital states
+// inital states of the plugin
 var ids = ["black", "asian", "hispanic", "white"];
 for (i in ids) {
   chrome.storage.local.set({
