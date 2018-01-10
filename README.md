@@ -33,7 +33,7 @@ https://theestablishment.co/yes-your-dating-preferences-are-probably-racist-e58a
 * [x] Make it prettier
 * [x] Add contributing notes / documentation
 * [x] Add disclaimer about dating w racial preferences
-* [ ] Clean up code and publish!!!!
+* [x] Clean up code and publish!!!!
 
 ## Documentation
 
