@@ -130,7 +130,7 @@ var readyStateCheckInterval = setInterval(function() {
 
     // add the keyboard listener for cmd shift l
     document.addEventListener("keydown", function(event) {
-      if (event.metaKey && event.shiftKey && event.keyCode == 76) {
+      if (event.ctrlKey && event.shiftKey && event.keyCode == 76) {
         // console.log("cmd shift L was pressed");
         // set the state
         chrome.storage.local.get(["running", "kairosId", "kairosKey"], function(
