@@ -2,6 +2,8 @@
 
 Chrome plugin for Tinder &lt;3
 
+## ADDING FUNCTIONALITY THAT ALREADY EXISTS IN POPULAR DATING SERVICES SUCH AS OKCUPID AND EAST MEET EAST ONTO TINDER.
+
 ![Screen shot](https://image.ibb.co/csy0Pw/Screen_Shot_2018_01_06_at_7_24_34_PM.png)
 
 **USE AT YOUR OWN RISK**
