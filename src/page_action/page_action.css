@@ -1,0 +1,42 @@
+body {
+  background-color: #f8f8f8;
+}
+.main-popup {
+  height: 320px;
+  width: 250px;
+  font-family: Helvetica, Ubuntu, Arial, sans-serif;
+}
+h1 {
+  font-size: 2em;
+}
+div {
+  text-align: center;
+}
+div.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+div.options-last {
+  justify-content: left;
+}
+div.separator {
+  width: 100%;
+  border-top: 2px groove white;
+  margin: 5px -5px 5px -3px;
+}
+#all {
+  margin-right: 10px;
+}
+div.config {
+  text-align: left;
+}
+div.config:hover {
+  cursor: pointer;
+  background-color: #e5e5e5;
+}
+div.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
