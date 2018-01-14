@@ -4,26 +4,10 @@ Chrome plugin for Tinder &lt;3
 
 ## Table of Content
 
-* [Roadmap](#roadmap)
 * [Documentation](#documentation)
   * [Structure](#structure)
   * [Messages](#messages)
   * [Storage](#storage)
-
-## Roadmap
-
-* [x] Auto swiping (keyboard shortcut) cmd-shift-L
-* [x] Grab image from Tinder + get base64 encoding
-* [x] Set up inject.js and background.js message passing
-* [x] Connect Haystack.ai
-* [x] Allow user to swipe based on race
-* [x] Add % confidence
-* [x] Switch to kairos api
-* [x] Add option for user to add their own API key
-* [x] Make it prettier
-* [x] Add contributing notes / documentation
-* [x] Add disclaimer about dating w racial preferences
-* [x] Clean up code and publish!!!!
 
 ## Documentation
 
@@ -85,7 +69,7 @@ We use local storage to store stuff about preferences and other states
 
 ```javascript
 // inital states of the plugin
-var ids = ["black", "asian", "hispanic", "white"];
+var ids = ["anger", "disgust", "fear", "joy", "sadness", "surprise"];
 for (i in ids) {
   chrome.storage.local.set({
     [ids[i]]: false,
