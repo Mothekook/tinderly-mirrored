@@ -170,10 +170,18 @@ var readyStateCheckInterval = setInterval(function() {
         ) {
           if (!items["kairosId"] || !items["kairosKey"]) {
             alert("Please set Kairos configs!");
+            displayMessage("ctrl-shift-L to START swiping");
+            messageColor("green");
             return;
           }
 
           var nextStatus = !items["running"];
+
+          // if modal exists then stop swiping
+          if (document.querySelector("div.modalManager")) {
+            nextStatus = false;
+          }
+
           if (nextStatus) {
             var imageUrl = getImageUrl();
             chrome.storage.local.set(
