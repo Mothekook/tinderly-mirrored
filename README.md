@@ -21,7 +21,7 @@ Using chrome message passing / handling to handle the url parsing and swiping in
 
 `src/options_custom` contains the `fancy-settings` options menu that allows users to set the Kairos config
 
-`src/page_action` contains the code for the actual popup. Allows user to choose their ethnic preferences
+`src/page_action` contains the code for the actual popup. Allows user to choose their emotional preferences
 
 ### Messages
 
@@ -46,24 +46,6 @@ chrome.runtime.sendMessage({ imageUrlSaved: true });
 We use local storage to store stuff about preferences and other states
 
 `running` **boolean** are we running the auto swiper
-
-`asian` **boolean** is asian checked
-
-`black` **boolean** is black checked
-
-`hispanic` **boolean** is hispanic checked
-
-`white` **boolean** is white checked
-
-`all` **boolean** is no preference checked
-
-`asianConfidence` **int** confidence percentage for asians (default 50)
-
-`blackConfidence` **int** confidence percentage for blacks (default 50)
-
-`hispanicConfidence` **int** confidence percentage for hispanics (default 50)
-
-`whiteConfidence` **int** confidence percentage for whites (default 50)
 
 `imageUrl` **string** image url fetched from the tinder.com webapp
 
