@@ -5,6 +5,29 @@ var URL = "https://api.kairos.com/v2/media";
 var LIKE = ".recsGamepad__button--like";
 var DISLIKE = ".recsGamepad__button--dislike";
 var IMAGE = "div.recCard__img:eq(1)";
+var TOOLBAR = ".recsToolbar";
+var INFO = "div.info";
+
+// create the info tab about the plugin
+var addInfoBarInterval = setInterval(() => {
+  var toolBar = document.querySelector(TOOLBAR);
+  if (toolBar) {
+    clearInterval(addInfoBarInterval);
+    var infoBar = document.createElement("div");
+    infoBar.className = "info";
+    toolBar.parentElement.insertBefore(infoBar, toolBar.nextSibling);
+    displayMessage("ctrl-shift-L to START swiping");
+    messageColor("green");
+  }
+}, 10);
+
+function displayMessage(message) {
+  $(INFO).text(message);
+}
+
+function messageColor(color) {
+  $(INFO).css({ color: color });
+}
 
 function swipeRight() {
   $(LIKE).click();
@@ -59,7 +82,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             var attributes = getEmotions(jsonResponse);
             console.log(attributes);
             if (!attributes) {
-              console.log("No faces recognized");
               swipeLeft();
               chrome.runtime.sendMessage({ swiped: true });
               return;
@@ -79,7 +101,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             ) {
               if (items["all"]) {
                 // swipe right
-                console.log("all swipe right");
                 swipeRight();
               } else {
                 // get the required fields
@@ -143,6 +164,8 @@ var readyStateCheckInterval = setInterval(function() {
       if (event.ctrlKey && event.shiftKey && event.keyCode == 76) {
         // console.log("cmd shift L was pressed");
         // set the state
+        displayMessage("ctrl-shift-L to STOP swiping");
+        messageColor("red");
         chrome.storage.local.get(["running", "kairosId", "kairosKey"], function(
           items
         ) {
@@ -166,6 +189,8 @@ var readyStateCheckInterval = setInterval(function() {
           } else {
             // stop the execution
             // console.log("execution ended");
+            displayMessage("ctrl-shift-L to START swiping");
+            messageColor("green");
             chrome.storage.local.set({
               running: false
             });
