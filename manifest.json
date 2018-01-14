@@ -1,7 +1,7 @@
 {
   "name": "Tinderly: Tinder with Machine Learning <3",
   "short_name": "Tinderly",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "manifest_version": 2,
   "description":
     "Tinder makes finding love easier, Tinderly makes it effortless.",
