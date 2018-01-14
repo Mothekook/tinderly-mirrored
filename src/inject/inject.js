@@ -66,6 +66,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (!items["running"]) {
           return;
         }
+        // if modal exists then stop swiping
+        if (document.querySelector("div.modalManager")) {
+          chrome.storage.local.set({
+            running: false
+          });
+          displayMessage("ctrl-shift-L to START swiping");
+          messageColor("green");
+          return;
+        }
+
         var header = {
           app_id: items["kairosId"],
           app_key: items["kairosKey"]
@@ -176,11 +186,6 @@ var readyStateCheckInterval = setInterval(function() {
           }
 
           var nextStatus = !items["running"];
-
-          // if modal exists then stop swiping
-          if (document.querySelector("div.modalManager")) {
-            nextStatus = false;
-          }
 
           if (nextStatus) {
             var imageUrl = getImageUrl();
