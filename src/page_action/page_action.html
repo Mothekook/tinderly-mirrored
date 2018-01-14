@@ -5,7 +5,7 @@
 		background-color: #f8f8f8;
 	}
 	.main-popup {
-		height: 290px;
+		height: 320px;
 		width: 250px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 	}
@@ -25,7 +25,7 @@
 	}
 	div.separator {
     width: 100%;
-    border-top: 2px groove white;
+		border-top: 2px groove white;
     margin: 5px -5px 5px -3px;
 	}
 	#all {
@@ -54,26 +54,36 @@
 	<div class="separator"></div>
 	<div class="config" id="kairos">Kairos Configs</div>
 	<div class="separator"></div>
-	<h4>Ethnic preference %</h4>
+	<h4>Emotional preference %</h4>
 	<div class="options">
-		<input type="checkbox" id="black">Black
-		<input type="range" min="1" max="100" value="50" class="slider" id="black-confidence">
-		<label id="black-confidence-value">50</label>
+		<input type="checkbox" id="anger">anger
+		<input type="range" min="0" max="100" value="50" class="slider" id="anger-confidence">
+		<label id="anger-confidence-value">50</label>
 	</div>
 	<div class="options">
-		<input type="checkbox" id="asian">Asian
-		<input type="range" min="1" max="100" value="50" class="slider" id="asian-confidence">
-		<label id="asian-confidence-value">50</label>
+		<input type="checkbox" id="disgust">disgust
+		<input type="range" min="0" max="100" value="50" class="slider" id="disgust-confidence">
+		<label id="disgust-confidence-value">50</label>
 	</div>
 	<div class="options">
-		<input type="checkbox" id="white">White
-		<input type="range" min="1" max="100" value="50" class="slider" id="white-confidence">
-		<label id="white-confidence-value">50</label>
+		<input type="checkbox" id="fear">fear
+		<input type="range" min="0" max="100" value="50" class="slider" id="fear-confidence">
+		<label id="fear-confidence-value">50</label>
 	</div>
 	<div class="options">
-		<input type="checkbox" id="hispanic">Hispanic
-		<input type="range" min="1" max="100" value="50" class="slider" id="hispanic-confidence">
-		<label id="hispanic-confidence-value">50</label>
+		<input type="checkbox" id="joy">joy
+		<input type="range" min="0" max="100" value="50" class="slider" id="joy-confidence">
+		<label id="joy-confidence-value">50</label>
+	</div>
+	<div class="options">
+		<input type="checkbox" id="sadness">sadness
+		<input type="range" min="0" max="100" value="50" class="slider" id="sadness-confidence">
+		<label id="sadness-confidence-value">50</label>
+	</div>
+	<div class="options">
+		<input type="checkbox" id="surprise">surprise
+		<input type="range" min="0" max="100" value="50" class="slider" id="surprise-confidence">
+		<label id="surprise-confidence-value">50</label>
 	</div>
 	<div class="options options-last">
 		<input type="checkbox" id="all">No preference

@@ -33,12 +33,11 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
   }
 });
 
-// inital states
-var ids = ["black", "asian", "hispanic", "white"];
+var ids = ["anger", "disgust", "fear", "joy", "sadness", "surprise"];
 for (i in ids) {
   chrome.storage.local.set({
     [ids[i]]: false,
-    [`${ids[i]}Confidence`]: 50
+    [`${ids[i]}Confidence`]: 0
   });
 }
 chrome.storage.local.set({ all: true });

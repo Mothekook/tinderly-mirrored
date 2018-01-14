@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  var ids = ["black", "asian", "hispanic", "white"];
+  var ids = ["anger", "disgust", "fear", "joy", "sadness", "surprise"];
 
   // load previous states
   chrome.storage.local.get(null, function(items) {

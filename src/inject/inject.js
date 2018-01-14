@@ -1,5 +1,5 @@
-// cant really hide stuff in a chrome extension :(
-var URL = "https://api.kairos.com/detect";
+// var URL = "https://api.kairos.com/detect";
+var URL = "https://api.kairos.com/v2/media";
 
 // css class name selectors
 var LIKE = ".recsGamepad__button--like";
@@ -21,11 +21,15 @@ function getImageUrl() {
     .replace(/["']?\)$/, "");
 }
 
-function getAttributes(response) {
-  if (!response["images"]) {
+function getEmotions(response) {
+  // if (!response["images"]) {
+  //   return null;
+  // }
+  // return response["images"][0]["faces"][0]["attributes"];
+  if (!response["frames"][0] || !response["frames"][0]["people"][0]) {
     return null;
   }
-  return response["images"][0]["faces"][0]["attributes"];
+  return response["frames"][0]["people"][0]["emotions"];
 }
 
 // handle messages from background.js
@@ -43,61 +47,67 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           app_id: items["kairosId"],
           app_key: items["kairosKey"]
         };
-        var payload = { image: items["imageUrl"] };
-        $.ajax(URL, {
+        // var payload = { image: items["imageUrl"] };
+        var source = encodeURI(items["imageUrl"]);
+        $.ajax(`${URL}?source=${source}`, {
           headers: header,
           type: "POST",
-          data: JSON.stringify(payload),
+          // data: JSON.stringify(payload),
           dataType: "text",
           success: function(response) {
             jsonResponse = JSON.parse(response);
-            var attributes = getAttributes(jsonResponse);
+            var attributes = getEmotions(jsonResponse);
+            console.log(attributes);
             if (!attributes) {
-              // console.log("No faces recognized");
+              console.log("No faces recognized");
               swipeLeft();
               chrome.runtime.sendMessage({ swiped: true });
               return;
             }
             var shouldSwipeRight = true;
-            var ethnicities = ["black", "asian", "hispanic", "white"];
-            var fields = ethnicities.map(item => item + "Confidence");
-            chrome.storage.local.get(
-              [...fields, ...ethnicities, "all"],
-              function(items) {
-                if (items["all"]) {
-                  // swipe right
-                  // console.log("all swipe right");
-                  swipeRight();
-                } else {
-                  // get the required fields
-                  var required = [];
-                  for (i in ethnicities) {
-                    if (items[ethnicities[i]]) {
-                      required.push(ethnicities[i]);
-                    }
-                  }
-                  // check that the required confidence match
-                  var requiredFields = required.map(
-                    item => item + "Confidence"
-                  );
-                  for (var i = 0; i < requiredFields.length; i++) {
-                    var responseConfidence = attributes[required[i]];
-                    var storedConfidence = items[requiredFields[i]];
-                    if (responseConfidence < storedConfidence / 100) {
-                      shouldSwipeRight = false;
-                    }
-                  }
-                  if (shouldSwipeRight) {
-                    // console.log("swipe right");
-                    swipeRight();
-                  } else {
-                    // console.log("swipe left");
-                    swipeLeft();
+            var emotions = [
+              "anger",
+              "disgust",
+              "fear",
+              "joy",
+              "sadness",
+              "surprise"
+            ];
+            var fields = emotions.map(item => item + "Confidence");
+            chrome.storage.local.get([...fields, ...emotions, "all"], function(
+              items
+            ) {
+              if (items["all"]) {
+                // swipe right
+                console.log("all swipe right");
+                swipeRight();
+              } else {
+                // get the required fields
+                var required = [];
+                for (i in emotions) {
+                  if (items[emotions[i]]) {
+                    required.push(emotions[i]);
                   }
                 }
-                chrome.runtime.sendMessage({ swiped: true });
+                // check that the required confidence match
+                var requiredFields = required.map(item => item + "Confidence");
+                for (var i = 0; i < requiredFields.length; i++) {
+                  var responseConfidence = attributes[required[i]];
+                  var storedConfidence = items[requiredFields[i]];
+                  if (responseConfidence < storedConfidence / 100) {
+                    shouldSwipeRight = false;
+                  }
+                }
+                if (shouldSwipeRight) {
+                  // console.log("swipe right");
+                  swipeRight();
+                } else {
+                  // console.log("swipe left");
+                  swipeLeft();
+                }
               }
-            );
+              chrome.runtime.sendMessage({ swiped: true });
+            });
           },
           error: function(error) {
             alert(
