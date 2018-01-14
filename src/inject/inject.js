@@ -80,7 +80,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           success: function(response) {
             jsonResponse = JSON.parse(response);
             var attributes = getEmotions(jsonResponse);
-            console.log(attributes);
             if (!attributes) {
               swipeLeft();
               chrome.runtime.sendMessage({ swiped: true });
