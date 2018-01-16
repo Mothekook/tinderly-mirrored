@@ -2,6 +2,8 @@
 
 Chrome plugin for Tinder &lt;3
 
+## [INSTALL](https://chrome.google.com/webstore/detail/tinderly-tinder-with-mach/mdkobmclngihinplcodbehpmocchnmob)
+
 ![](https://image.ibb.co/dCcYp6/Screen_Shot_2018_01_14_at_12_31_41_PM.png)
 
 ## Table of Content
